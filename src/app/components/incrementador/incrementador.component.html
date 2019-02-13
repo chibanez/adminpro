@@ -3,7 +3,7 @@
     <div class="input-group-prepend">
         <button class="btn btn-outline-primary" type="button" id="button-addon1" (click)="actualizarValor(-5)"><i class="mdi mdi-minus"></i></button>
     </div>
-    <input type="text" class="form-control" [(ngModel)]="progreso">
+    <input type="number" class="form-control" #txtProgress name="progreso" [(ngModel)]="progreso" min="1" max="100" (ngModelChange)="onChanges($event)"> 
     <div class="input-group-append">
         <button class="btn btn-outline-primary" type="button" id="button-addon2" (click)="actualizarValor(+5)"><i class="mdi mdi-plus"></i></button>
     </div>
