@@ -37,15 +37,15 @@ export class IncrementadorComponent implements OnInit {
   }
 
   onChanges(evento: number) {
-    
+
     if (evento > 100) {
       this.progreso = 100;
     }
     if (evento == null || evento < 0) {
       this.progreso = 0;
     }
-  
-    //Fuerzo a que el texto del input sea el valor que yo estoy mandando para afuera (por mas que ingrese 233333 va a decir siempre 100 el input)
+
+    // Fuerzo a que el texto del input sea el valor que yo estoy mandando para afuera (por mas que ingrese 233333 va a decir siempre 100 el input)
     this.txtProgress.nativeElement.value = this.progreso;
 
     this.cambioValor.emit(this.progreso);
