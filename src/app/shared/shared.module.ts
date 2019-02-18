@@ -4,6 +4,8 @@ import { PagenotfoundComponent } from '../shared/pagenotfound/pagenotfound.compo
 import { HeaderComponent } from './header/header.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
+import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
     declarations: [
@@ -11,6 +13,10 @@ import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
         HeaderComponent,
         SidebarComponent,
         BreadcrumbsComponent,
+    ],
+    imports: [
+        RouterModule,
+        CommonModule
     ],
     exports: [
         PagenotfoundComponent,

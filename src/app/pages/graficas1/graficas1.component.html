@@ -1,3 +1,32 @@
-<p>
-  graficas1 works!
-</p>
+<div class="row">
+    <div class="col-6">
+        <div class="card">
+            <div class="card-body">
+                <app-graficodona [titulo]="graficos['grafico1']['leyenda']" [datos]="graficos['grafico1']['data']" [leyendas]="graficos['grafico1']['labels']" [tipo]="graficos['grafico1']['type']"></app-graficodona>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="card">
+            <div class="card-body">
+                <app-graficodona [titulo]="graficos['grafico2']['leyenda']" [datos]="graficos['grafico2']['data']" [leyendas]="graficos['grafico2']['labels']" [tipo]="graficos['grafico2']['type']"></app-graficodona>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-6">
+        <div class="card">
+            <div class="card-body">
+                <app-graficodona [titulo]="graficos['grafico3']['leyenda']" [datos]="graficos['grafico3']['data']" [leyendas]="graficos['grafico3']['labels']" [tipo]="graficos['grafico3']['type']"></app-graficodona>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="card">
+            <div class="card-body">
+                <app-graficodona [titulo]="graficos['grafico4']['leyenda']" [datos]="graficos['grafico4']['data']" [leyendas]="graficos['grafico4']['labels']" [tipo]="graficos['grafico4']['type']"></app-graficodona>
+            </div>
+        </div>
+    </div>
+</div>
