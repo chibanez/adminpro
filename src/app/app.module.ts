@@ -8,7 +8,7 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './login/register.component';
 
 import { APP_ROUTES } from './adminpro.routes';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ServiceModule } from './services/service.module';
 
 
@@ -22,6 +22,7 @@ import { ServiceModule } from './services/service.module';
     BrowserModule,
     PagesModule,
     FormsModule,
+    ReactiveFormsModule,
     ServiceModule,
     APP_ROUTES
   ],
