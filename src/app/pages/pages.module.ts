@@ -12,6 +12,9 @@ import { GraficodonaComponent } from '../components/graficodona/graficodona.comp
 import { AccountSettingsComponent } from './account-settings/account-settings.component';
 import { PromesasComponent } from './promesas/promesas.component';
 import { RxjsComponent } from './rxjs/rxjs.component';
+import { PipesModule } from '../pipes/pipes.module';
+import { ProfileComponent } from './profile/profile.component';
+import { CommonModule } from '@angular/common';
 @NgModule({
     declarations: [
         PagesComponent,
@@ -22,7 +25,8 @@ import { RxjsComponent } from './rxjs/rxjs.component';
         GraficodonaComponent,
         AccountSettingsComponent,
         PromesasComponent,
-        RxjsComponent
+        RxjsComponent,
+        ProfileComponent
       ],
     exports: [
         PagesComponent,
@@ -31,9 +35,11 @@ import { RxjsComponent } from './rxjs/rxjs.component';
         Graficas1Component
     ],
     imports: [
+        CommonModule,
         SharedModule,
         FormsModule,
         ChartsModule,
+        PipesModule,
         PAGES_ROUTES
     ]
 })

@@ -5,7 +5,7 @@ import { URL_SERVICIOS } from '../../config/config';
 import { map } from 'rxjs/operators';
 import swal from 'sweetalert';
 import { Router } from '@angular/router';
-import { routerNgProbeToken } from '@angular/router/src/router_module';
+import { SubirArchivoService } from '../subir-archivo/subir-archivo.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,7 @@ export class UsuarioService {
   usuario: Usuario;
   token: string;
 
-  constructor(private router: Router, public http: HttpClient) {
+  constructor(private router: Router, public http: HttpClient, private subirArchivoService: SubirArchivoService) {
     this.cargarDeLocalStorage();
    }
 
@@ -102,6 +102,45 @@ export class UsuarioService {
       return resp.usuario;
     })
   );
+
+  }
+
+  actualizarUsuario( usuario: Usuario ) {
+
+    let url = URL_SERVICIOS + '/usuario/' + usuario._id;
+    url += '?token=' + this.token;
+
+    console.log(url);
+
+    return this.http.put( url, usuario).pipe(
+      map( (resp: any) => {
+        // Guardo la info actualizada en localstorage
+        // No me copa que lo haga aca, despues hay que ver que lo que haga aca
+        // sea independiente de la aplicacion
+        let usuarioDB = resp.usuario;
+        this.guardarLocalStorage(usuarioDB._id, this.token, usuarioDB);
+
+        // Aca mete el swal en en service a mi no me gusta
+        // Prefiero ponerlo en la interface
+        swal('Usuario actualizado', usuario.nombre, 'success');
+        return true;
+      })
+    );
+
+  }
+
+  cambiarImagen( archivo: File, id: string ) {
+
+    this.subirArchivoService.subirArchivo(archivo, 'usuarios', id)
+          .then( (resp: any) => {
+            console.log('ok', resp);
+            this.usuario.img = resp.usuario.img;
+            swal('Imagen actualizada', this.usuario.nombre, 'success');
+            this.guardarLocalStorage(id, this.token, this.usuario);
+
+          }).catch( resp => {
+            console.log('error', resp);
+          });
 
   }
 }

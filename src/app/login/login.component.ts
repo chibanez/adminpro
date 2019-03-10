@@ -58,10 +58,11 @@ export class LoginComponent implements OnInit {
 
       // let profile = googleUser.getBasicProfile();
       let token = googleUser.getAuthResponse().id_token;
-      console.log( token );
 
       this.usuarioService.loginGoogle( token )
-        .subscribe( resp => this.router.navigate(['/dashboard']));
+        .subscribe( resp => window.location.href = '#/dashboard');
+        // Normalmente deberia redireccionar con:
+        // .subscribe( resp => this.router.navigate(['/dashboard']));
         // Si llego a tener problemas de refresco de la pantalla destino, probar haciendo una redireccion
         // "manual" con vanilla javascript:
         // .subscribe( resp => window.location.href = '#/dashboard');
