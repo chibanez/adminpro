@@ -52,6 +52,8 @@ export class ModalUploadComponent implements OnInit {
     .then(
       resp => {
 
+        // Devuelvo la info de la imagen que subi a traves
+        // de la notificacion del service
         this.modalUploadService.notificacion.emit( resp );
         this.cerrarModal();
 
