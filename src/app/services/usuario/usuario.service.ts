@@ -2,10 +2,12 @@ import { Injectable } from '@angular/core';
 import { Usuario } from '../../models/usuario.model';
 import { HttpClient } from '@angular/common/http';
 import { URL_SERVICIOS } from '../../config/config';
-import { map } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs/internal/observable/throwError';
 import swal from 'sweetalert';
 import { Router } from '@angular/router';
 import { SubirArchivoService } from '../subir-archivo/subir-archivo.service';
+
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +16,7 @@ export class UsuarioService {
 
   usuario: Usuario;
   token: string;
+  menu: any[] = [];
 
   constructor(private router: Router, public http: HttpClient, private subirArchivoService: SubirArchivoService) {
     this.cargarDeLocalStorage();
@@ -27,26 +30,32 @@ export class UsuarioService {
     if ( localStorage.getItem('token') ) {
       this.token = localStorage.getItem('token');
       this.usuario = JSON.parse(localStorage.getItem('usuario'));
+      this.menu = JSON.parse(localStorage.getItem('menu'));
     } else {
       this.token = '';
       this.usuario = null;
+      this.menu = [];
     }
   }
-  guardarLocalStorage( id: string, token: string, usuario: Usuario ) {
+  guardarLocalStorage( id: string, token: string, usuario: Usuario, menu: any ) {
     localStorage.setItem( 'id', id );
     localStorage.setItem( 'token', token );
     localStorage.setItem( 'usuario', JSON.stringify(usuario) );
+    localStorage.setItem( 'menu', JSON.stringify(menu) );
 
     this.usuario = usuario;
     this.token = token;
+    this.menu = menu;
   }
 
   logout() {
     this.usuario = null;
     this.token = '';
+    this.menu = [];
 
     localStorage.removeItem('token');
     localStorage.removeItem('usuario');
+    localStorage.removeItem('menu');
 
     this.router.navigate(['/login']);
 
@@ -57,8 +66,8 @@ export class UsuarioService {
 
     return this.http.post( url, {token: token} ).pipe(
       map( (resp: any) => {
-
-        this.guardarLocalStorage( resp.id, resp.token, resp.usuario);
+        console.log(resp.menu);
+        this.guardarLocalStorage( resp.id, resp.token, resp.usuario, resp.menu);
 
         // Devuelvo a la interfaz un "login true"
         // Los datos los dejo guardados en la local storage
@@ -80,12 +89,16 @@ export class UsuarioService {
     let url = URL_SERVICIOS + '/login';
     return this.http.post( url, usuario ).pipe(
       map( (resp: any) => {
-
-        this.guardarLocalStorage( resp.id, resp.token, resp.usuario);
+        console.log(resp.menu);
+        this.guardarLocalStorage( resp.id, resp.token, resp.usuario, resp.menu );
 
         // Devuelvo a la interfaz un "login true"
         // Los datos los dejo guardados en la local storage
         return true;
+      }),
+      catchError( err => {
+        swal('Login Incorrecto', err.error.mensaje, 'error');
+        return throwError(err);
       })
     );
   }
@@ -100,6 +113,10 @@ export class UsuarioService {
       // Prefiero ponerlo en la interface
       swal('Usuario creado', usuario.email, 'success');
       return resp.usuario;
+    }),
+    catchError( err => {
+      swal(err.error.mensaje, err.error.errors.message, 'error');
+      return throwError(err);
     })
   );
 
@@ -122,13 +139,17 @@ export class UsuarioService {
           // Solo actualizo la info del LocalStorage si estoy modificando
           // mi propio usuario
           let usuarioDB = resp.usuario;
-          this.guardarLocalStorage(usuarioDB._id, this.token, usuarioDB);
+          this.guardarLocalStorage(usuarioDB._id, this.token, usuarioDB, this.menu);
         }
 
         // Aca mete el swal en en service a mi no me gusta
         // Prefiero ponerlo en la interface
         swal('Usuario actualizado', usuario.nombre, 'success');
         return true;
+      }),
+      catchError( err => {
+        swal(err.error.mensaje, err.error.errors.message, 'error');
+        return throwError(err);
       })
     );
 
@@ -138,10 +159,9 @@ export class UsuarioService {
 
     this.subirArchivoService.subirArchivo(archivo, 'usuarios', id)
           .then( (resp: any) => {
-            console.log('ok', resp);
             this.usuario.img = resp.usuario.img;
             swal('Imagen actualizada', this.usuario.nombre, 'success');
-            this.guardarLocalStorage(id, this.token, this.usuario);
+            this.guardarLocalStorage(id, this.token, this.usuario, this.menu);
 
           }).catch( resp => {
             console.log('error', resp);

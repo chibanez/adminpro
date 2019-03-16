@@ -6,7 +6,7 @@ import { URL_SERVICIOS } from '../config/config';
 })
 export class ImagenPipe implements PipeTransform {
 
-  transform(img: string, tipo: string = 'usuario'): any {
+  transform(img: string, tipo: string = 'usuarios'): any {
     // img puede ser el nombre de la imagen o la ruta complea de la imagen de google
     let url = URL_SERVICIOS + '/img';
 
@@ -20,10 +20,10 @@ export class ImagenPipe implements PipeTransform {
     }
 
     switch ( tipo ) {
-      case 'usuario':
+      case 'usuarios':
         url +=  '/usuarios/' + img;
         break;
-      case 'medico':
+      case 'medicos':
         url += '/medicos/' + img;
         break;
       case 'hospitales':
