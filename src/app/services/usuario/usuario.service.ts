@@ -7,6 +7,7 @@ import { throwError } from 'rxjs/internal/observable/throwError';
 import swal from 'sweetalert';
 import { Router } from '@angular/router';
 import { SubirArchivoService } from '../subir-archivo/subir-archivo.service';
+import { analyzeAndValidateNgModules } from '@angular/compiler';
 
 
 @Injectable({
@@ -21,6 +22,27 @@ export class UsuarioService {
   constructor(private router: Router, public http: HttpClient, private subirArchivoService: SubirArchivoService) {
     this.cargarDeLocalStorage();
    }
+
+  renuevaToken() {
+    let url = URL_SERVICIOS + '/login/renuevatoken';
+    url += '?token=' + this.token;
+
+    return this.http.get( url ).pipe(
+      map( (resp: any) => {
+        this.token = resp.token;
+        // Aca grabo directamente en el LS de vago, tendria que estar centralizado
+        localStorage.setItem( 'token', resp.token );
+        return true;
+      }),
+      catchError( err => {
+        swal('No se pudo renovar el token', 'No fue posible renovar el token', 'error');
+        this.router.navigate(['/login']);
+        return throwError(err);
+        }
+      )
+    );
+
+  }
 
   estaLogueado() {
     return ( this.token.length > 5 ) ? true : false;
